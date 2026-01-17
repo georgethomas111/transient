@@ -29,10 +29,11 @@ Example shape (global aggregates locals by node id, each with value + timestamp)
 
 ## Config
 
-`nodeCount` is the number of nodes/locations in the cluster (typically set via an environment variable each location reads).
+`totalNodes` is the number of nodes/locations in the cluster (typically set via an environment variable each location reads). `gossipPeersPerRound` is how many peers a node gossips to per round, only if it received new data in the prior round (local or neighbor).
 
 ```json
 {
-  "nodeCount": 4
+  "totalNodes": 4,
+  "gossipPeersPerRound": 2
 }
 ```
