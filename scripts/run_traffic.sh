@@ -30,6 +30,7 @@ while [ "$SECONDS" -lt "$END_TIME" ]; do
   PORT=$((BASE_PORT + NODE_INDEX))
   VALUE=$((RANDOM % 100))
 
+  printf '%s\n' "$(date -u +"%Y-%m-%dT%H:%M:%SZ") -> POST /key/save to ${PORT} value=${VALUE}"
   ./scripts/post_local.sh "$PORT" "$VALUE" >/dev/null
 
   SLEEP_TIME=$((8 + RANDOM % 5))

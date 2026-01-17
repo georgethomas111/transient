@@ -38,6 +38,46 @@ Example shape (global aggregates locals by node id, each with value + timestamp)
 }
 ```
 
+## Gossip behavior
+
+When a node receives `/gossip` and the merge results in a newer timestamp for any entry, it triggers another round of gossip to its peers. If nothing changes, it does not re-gossip.
+
+## High-level flow
+
+```
+                 +------------------+
+                 |   Client/Script  |
+                 | POST /key/save   |
+                 +---------+--------+
+                           |
+                           v
+                   +-------+--------+
+                   |   Node N       |
+                   | local + global |
+                   +-------+--------+
+                           |
+              local update + ts
+                           |
+                           v
+            gossip trigger (if changed)
+                           |
+                           v
+               select random peers
+                           |
+        +------------------+------------------+
+        |                                     |
+        v                                     v
++-------+--------+                    +-------+--------+
+|   Node A       |                    |   Node B       |
+| POST /gossip   |                    | POST /gossip   |
++-------+--------+                    +-------+--------+
+        |                                     |
+   merge global                            merge global
+   compute gossipDelayMs                   compute gossipDelayMs
+        |                                     |
+        +-------------> if changed, gossip ----+
+```
+
 ## Running locally
 
 ```bash

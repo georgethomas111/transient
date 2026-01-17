@@ -20,7 +20,28 @@ for (let i = 0; i < config.totalNodes; i += 1) {
   );
 }
 
-process.on("SIGINT", async () => {
-  await Promise.all(nodes.map((node) => node.shutdown()));
-  process.exit(0);
-});
+let shuttingDown = false;
+
+async function shutdown(signal) {
+  if (shuttingDown) {
+    return;
+  }
+  shuttingDown = true;
+
+  console.log(`\nReceived ${signal}. Shutting down...`);
+
+  const forceExit = setTimeout(() => {
+    console.log("Forcing shutdown after 2s timeout.");
+    process.exit(0);
+  }, 2000);
+
+  try {
+    await Promise.all(nodes.map((node) => node.shutdown()));
+  } finally {
+    clearTimeout(forceExit);
+    process.exit(0);
+  }
+}
+
+process.on("SIGINT", () => shutdown("SIGINT"));
+process.on("SIGTERM", () => shutdown("SIGTERM"));
