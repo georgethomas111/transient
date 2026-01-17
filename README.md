@@ -37,3 +37,20 @@ Example shape (global aggregates locals by node id, each with value + timestamp)
   "gossipPeersPerRound": 2
 }
 ```
+
+## Running locally
+
+```bash
+npm install
+npm start
+```
+
+Stop the servers with Ctrl+C.
+
+## Local scripts
+
+```bash
+./scripts/post_local.sh 2727 5
+./scripts/run_traffic.sh
+./scripts/run_traffic.sh --help
+```
